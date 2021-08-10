@@ -25,7 +25,7 @@ The table below lists all possible configuration options.
             position: 'top_right',
             config: {
                 header: "xkcd",
-                updateInterval: 10 * 60 * 60 * 1000, // 10 hours
+                updateInterval: 10 * 60 * 60 * 1000,
                 grayScale: false,
                 invertColors: false,
                 limitComicWidth: 400,
