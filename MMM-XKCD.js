@@ -43,7 +43,7 @@ Module.register("MMM-XKCD", {
 
     // Define header.
     getHeader: function() {
-        if (this.config.showTitle && !this.dailyComicTitle === "") {
+        if (this.config.showTitle && !this.dailyComicTitle == "") {
             return this.config.header + " - " + this.dailyComicTitle;
         } else {
             return this.config.header;
