@@ -48,7 +48,7 @@ The following configuration options can be set and/or changed:
 | `updateInterval` | `int` | `36000000` | Update interval of comic [milliseconds] (10 hours) |
 | `grayScale` | `bool` | `false` | Desaturate colors of the comic to grayscale |
 | `invertedColors` | `bool` | `false` | Invert colors of the comic to create a darker feeling |
-| `limitComicWidth` | `int` | `400` | Limit the maximum width of the comic (0 implies to use the maximal width defined by the other modules) |
+| `limitComicWidth` | `int` | `400` | Limit the maximum width of the comic (0 implies to use the maximal width of the comic) |
 | `limitComicHeight` | `int` | `0` | Limit the maximum height of the comic (0 implies to use the maximal height of the comic) |
 | `randomComic` | `bool` | `false` | Display a random comic, where no new comic is available. |
 | `alwaysRandom` | `bool` | `false` | If you always want to see a random comic, even on days where a new comic is available. **Note: Only effective if `randomComic` is set to `true`**. |
