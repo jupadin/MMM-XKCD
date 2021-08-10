@@ -1,0 +1,12 @@
+/* Magic Mirror
+ * Module: MMM-XKCD
+ *
+ * By Julian Dinter
+ * MIT Licensed.
+ */
+
+#comicWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
