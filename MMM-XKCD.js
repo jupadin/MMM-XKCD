@@ -1,7 +1,7 @@
 /* Magic Mirror
  * Module: MMM-XKCD
  *
- * By jupadin
+ * By Julian Dinter
  * MIT Licensed.
  */
 

@@ -1,7 +1,7 @@
 /* Magic Mirror
  * Module: MMM-XKCD
  *
- * By jupadin
+ * By Julian Dinter
  * MIT Licensed.
  */
 
@@ -63,6 +63,6 @@ module.exports = NodeHelper.create({
                 });
             }
         });
-        setTimeout(function() {self.getComic();}, self.config.updateInterval);
+        setTimeout(self.getComic, self.config.updateInterval);
     },
 })
