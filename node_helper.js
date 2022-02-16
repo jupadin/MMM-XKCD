@@ -63,6 +63,6 @@ module.exports = NodeHelper.create({
                 });
             }
         });
-        setTimeout(self.getComic, self.config.updateInterval);
+        setTimeout(function() { self.getComic(); }, self.config.updateInterval);
     },
 })
