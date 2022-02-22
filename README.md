@@ -12,9 +12,14 @@ The module is based on the work of [Blastitt](https://github.com/Blastitt/DailyX
 
 Open a terminal session, navigate to your MagicMirror's `modules` folder and execute `git clone https://github.com/jupadin/MMM-XKCD.git`, such that a new folder called MMM-XKCD will be created.
 
-Activate the module by adding it to the `config.js` file of the MagicMirror as shown below.
+Activate the module by adding it to the `config.js` file of the MagicMirror as shown [below](#using-the-module).
 
-The table below lists all possible configuration options.
+The [table](#configuration-options) below that lists all possible configuration options.
+
+You also have to install all dependencies inside the module directory by calling
+```
+npm install --only=prod
+```
 
 ## Using the module
 ````javascript
