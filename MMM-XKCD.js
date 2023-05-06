@@ -80,10 +80,26 @@ Module.register("MMM-XKCD", {
         // Limit width or height of comic on load
         comic.onload = function() {
             const width = this.width;
-            if (this.config.limitComicHeight > 0) {
+
+            // This updated section allows you to set a maximum for both the width and height and
+            // scales the final size so the comic is no larger than either. Making either 0 will
+            // still scale the entire comic to the max size of the other parameter.
+            const height = this.height;
+            let comicRatio = width / height;
+
+            if (this.config.limitComicWidth != 0 &&
+                this.config.limitComicHeight != 0) {
+                if (width / this.config.limitComicWidth > height / this.config.limitComicHeight) {
+                    comic.style.width = this.config.limitComicWidth + "px";
+                    comic.style.height = this.config.limitComicWidth / comicRatio + "px";
+                } else {
+                    comic.style.height = this.config.limitComicHeight + "px";
+                    comic.style.width = this.config.limitComicHeight * comicRatio + "px";
+                }
+            } else if (this.config.limitComicHeight > 0) {
                 comic.style.height = this.config.limitComicHeight + "px";
                 comic.style.width = "auto";
-            } else if (this.config.limitComicWidth > 0 && width > this.config.limitComicWidth) {
+            } else {
                 comic.style.width = this.config.limitComicWidth + "px";
                 comic.style.height = "auto";
             }
