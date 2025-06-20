@@ -6,7 +6,6 @@
  */
 
 const NodeHelper = require('node_helper');
-const request = require('request');
 
 module.exports = NodeHelper.create({
     start: function() {
@@ -24,45 +23,77 @@ module.exports = NodeHelper.create({
     },
 
     getComic: function() {
+        // console.log(`${this.name}: Calling getComic.`);
         const self = this;
         const comicJSONURL = self.config.dailyJSONURL;
+        const requestOptions = {};
 
-        request(comicJSONURL, function(error, response, body) {
-            if (error || (response.statusCode != 200)) {
+        const date = new Date();
+        const dayOfWeek = date.getDay();
+
+        // If we are not replacing "old" comics with random ones
+        if (!self.config.randomComic) {
+            fetch(comicJSONURL, requestOptions)
+            .then(response => {
+                // console.log(`${this.name}: Fetching todays xkcd comic...`);
+                if (response.status != 200) {
+                    throw `Error with status != 200": ${response.status}`
+                }
+                return response.json();
+            })
+            .then(data => {
+                self.sendSocketNotification("COMIC", data);
                 return;
-            }
+            })
+            .catch(error => {
+                console.error(`${this.name}: ${error}`);
+                return;
+            })
+        }
+
+        else if (!self.config.alwaysRandom && (dayOfWeek == 1 || dayOfWeek == 3 || dayOfWeek == 5)) {
+            fetch(comicJSONURL, requestOptions)
+            .then(response => {
+                // console.log(`${this.name}: Fetching random xkcd comic, since there is no new one...`);
+                if (response.status != 200) {
+                    throw `Error with status != 200": ${response.status}`
+                }
+                return response.json();
+            })
+            .then(data => {
+                self.sendSocketNotification("COMIC", data);
+                return;
+            })
+            .catch(error => {
+                console.error(`${this.name}: ${error}`);
+                return;
+            })
+        } else {
+            // Math.random() returns a number between 0 and 1 (exclusive) and increased by 1 before rounding the number,
+            // since a number below 1 may multiplied by 1, would still be below 1 and floored to 0 (which would be the current comic).
+            const randomNumber = Math.floor(Math.random() * 10);
+            console.log(randomNumber);
+            const url = "https://xkcd.com/" + randomNumber + "/info.0.json";
             
-            // If we are not replacing "old" comics with random ones
-            if (!self.config.randomComic) {
-                self.sendSocketNotification("COMIC", JSON.parse(body));
+            fetch(url, requestOptions)
+            .then(response => {
+                // console.log(`${this.name}: Fetching random xkcd comic...`);
+                if (response.status != 200) {
+                    throw `Error with status != 200": ${response.status}.`
+                }
+                return response.json()
+            })
+            .then(data => {
+                self.sendSocketNotification("COMIC", data);
                 return;
-            }
-
-            const date = new Date();
-            const dayOfWeek = date.getDay();
-
-            // Otherwise select a random comic based on the day of week (Since there are only new comics on specific days)
-            // New comics appear on Monday, Wednesday and Friday.
-            if (!self.config.alwaysRandom && (dayOfWeek == 1 || dayOfWeek == 3 || dayOfWeek == 5)) {
-                self.sendSocketNotification("COMIC", JSON.parse(body));
+            })
+            .catch(error => {
+                console.error(`${this.name}: ${error}`)
+                self.sendSocketNotification("ERROR");
                 return;
-            } else {
-                const comic = JSON.parse(body);
-                // Math.random() returns a number between 0 and 1 (exclusive),
-                // multiplied by the current comic number to get a "real" random number,
-                // increased by 1 before rounding the number
-                // - Since a number below 1 may multiplied by 1, would still be below 1 and floored to 0 (which would be the current comic).
-                const randomNumber = Math.floor((Math.random() * comic.num) + 1);
-                const randomURL = "https://xkcd.com/" + randomNumber + "/info.0.json";
-                request(randomURL, function (error, response, body) {
-                    if (error || (response.statusCode != 200)) {
-                        return;
-                    }
-                    self.sendSocketNotification("COMIC", JSON.parse(body));
-                    return;
-                });
-            }
-        });
+            })
+        }
+
         setTimeout(function() { self.getComic(); }, self.config.updateInterval);
     },
 })

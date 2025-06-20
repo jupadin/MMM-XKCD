@@ -8,7 +8,7 @@
 Module.register("MMM-XKCD", {
     // Default module config.
     defaults: {
-        header: "xkcd",
+        header: "MMM-xkcd",
         dailyJSONURL: "https://xkcd.com/info.0.json",
         updateInterval: 10 * 60 * 60 * 1000, // 10 hours
         grayScale: false,
@@ -23,10 +23,16 @@ Module.register("MMM-XKCD", {
     // Define start sequence.
     start: function() {
         Log.info("Starting module: " + this.name);
+        
         this.dailyComic = "";
         this.dailyComicTitle = "";
+
+        this.numComic = null;
+        this.comicYear = null;
+        this.comicMonth = null;
+
         this.animationSpeed = 2000;
-        this.scrollProgress = 0;
+        // this.scrollProgress = 0;
         this.loaded = false;
         this.sendSocketNotification("SET_CONFIG", this.config);
     },
@@ -44,7 +50,20 @@ Module.register("MMM-XKCD", {
     // Define header.
     getHeader: function() {
         if (this.config.showTitle && !this.dailyComicTitle == "") {
-            return this.config.header + " - " + this.dailyComicTitle;
+            const title = document.createElement('div');
+            title.className = 'title';
+            title.innerText = this.config.header;
+
+            const text = document.createElement('div')
+            text.className = 'text';
+            text.innerText = this.dailyComicTitle;
+
+            const number = document.createElement('div');
+            number.className = 'number';
+            number.innerText = "(" + this.numComic + ")" + " | " + this.comicMonth.padStart(2, '0') + "." + this.comicYear;
+
+            return `${title.innerHTML} - ${text.innerHTML} ${number.innerHTML}`;
+            // return `${title.outerHTML} ${text.outerHTML} ${number.outerHTML}`;
         } else {
             return this.config.header;
         }
@@ -60,9 +79,6 @@ Module.register("MMM-XKCD", {
             wrapper.className = "light small dimmed";
             return wrapper;
         }
-
-        var comicWrapper = document.createElement("div");
-        comicWrapper.id = "comicWrapper";
         
         var comic = document.createElement("img");
         comic.id = "comic"
@@ -89,19 +105,23 @@ Module.register("MMM-XKCD", {
             }
         };
 
-        comicWrapper.appendChild(comic);
-        wrapper.appendChild(comicWrapper);
+        wrapper.appendChild(comic);
 
         return wrapper;
     },
 
     // Override socket notification handler.
     socketNotificationReceived: function(notification, payload) {
+        // console.log(payload);
         if (notification === "COMIC") {
             this.loaded = true;
             this.dailyComic = payload.img;
             // this.dailyComicTitle = payload.safe_title;
-            this.dailyComicTitle = payload.title;
+            console.log(payload.title.length);
+            this.dailyComicTitle = payload.title.substring(0, 15);
+            this.numComic = payload.num;
+            this.comicYear = payload.year;
+            this.comicMonth = payload.month;
             this.updateDom(this.animationSpeed);
         }
     }
