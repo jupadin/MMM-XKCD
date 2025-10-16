@@ -5,8 +5,10 @@
  * MIT Licensed.
  */
 
-#comicWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* .MMM-XKCD {
+    .module-header {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+} */
