@@ -22,7 +22,7 @@ Module.register("MMM-XKCD", {
 
     // Define start sequence.
     start: function() {
-        Log.info("Starting module: " + this.name);
+        // Log.info("Starting module: " + this.name);
         
         this.dailyComic = "";
         this.dailyComicTitle = "";
@@ -60,7 +60,7 @@ Module.register("MMM-XKCD", {
 
             const number = document.createElement('div');
             number.className = 'number';
-            number.innerText = "(" + this.numComic + ")" + " | " + this.comicMonth.padStart(2, '0') + "." + this.comicYear;
+            number.innerText = "(" + this.numComic + ")" + " | " + this.comicMonth.padStart(2, '0') + "." + this.comicYear + ")";
 
             return `${title.innerHTML} - ${text.innerHTML} ${number.innerHTML}`;
             // return `${title.outerHTML} ${text.outerHTML} ${number.outerHTML}`;
